@@ -3,7 +3,7 @@ name: Publish Blazor WASM to GitHub Pages
 on:
   push:
     branches:
-      - master  # eller din default branch
+      - master  # eller din default branch måske virker det nu
 
 jobs:
   build-and-publish:
