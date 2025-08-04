@@ -27,29 +27,31 @@
 
 .player-card {
     background-color: #1e1e1e;
-    padding: 1rem;
-    margin-top: 1.5rem;
+    padding: 0.75rem;
+    margin-top: 1rem;
     border: 1px solid #444;
-    border-radius: 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
 }
 
     .player-card h3 {
         color: #ff6c00;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
     }
 
     .player-card p {
-        margin: 0.25rem 0;
+        margin: 0.15rem 0;
     }
 
 .delete-button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.85rem;
     background-color: #ff3b3b;
     color: white;
-    font-weight: bold;
     border: none;
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -128,4 +130,57 @@
 
 .elo-label {
     font-weight: bold;
+}
+
+.overview-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 2rem;
+}
+
+.left-column,
+.right-column {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+}
+
+.player-compare-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.compare-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1e1e1e;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #444;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.compare-name {
+    font-weight: bold;
+    color: #ff6c00;
+    margin-right: 1rem;
+    min-width: 120px;
+}
+
+.compare-stats {
+    flex: 1;
+    color: #ccc;
+}
+
+.delete-button.small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
 }

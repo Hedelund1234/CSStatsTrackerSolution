@@ -6,40 +6,41 @@
 
 @page "/overview"
 
-<div class="player-info-container">
-    <input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
-    <button @onclick="AddToCompare" class="search-button">Sammenlign med spiller</button>
-</div>
+<div class="overview-layout">
+    <!-- Venstre side: Liste og spiller -->
+    <div class="left-column">
+        @if (player is not null)
+        {
+            <div class="player-card">
+                <h3>@player.Nickname</h3>
+                <p>Level: @player.CS2.Skill_Level</p>
+                <p>ELO: @player.CS2.Faceit_Elo</p>
+            </div>
+        }
 
-@if (isLoading)
-{
-    <p>Indlæser spillerdata...</p>
-}
-else if (player is null)
-{
-    <p>Ingen spillerdata fundet.</p>
-}
-else
-{
-    <div class="player-card">
-        <h3>@player.Nickname</h3>
-        <p>Level: @player.CS2.Skill_Level</p>
-        <p>ELO: @player.CS2.Faceit_Elo</p>
+        @if (playersToCompareList.Count > 0)
+        {
+            <ul class="player-compare-list">
+                @foreach (var comparedPlayer in playersToCompareList)
+                {
+                    <li class="compare-list-item">
+                        <span class="compare-name">@comparedPlayer.Nickname</span>
+                        <span class="compare-stats">Level: @comparedPlayer.CS2.Skill_Level | ELO: @comparedPlayer.CS2.Faceit_Elo</span>
+                        <button class="delete-button small" @onclick="() => DeleteComparedPlayer(comparedPlayer.Nickname)">Slet</button>
+                    </li>
+                }
+            </ul>
+        }
     </div>
-}
 
-@if (playersToCompareList.Count > 0)
-{
-    @foreach (var comparedPlayer in playersToCompareList)
-    {
-        <div class="player-card">
-            <h3>@comparedPlayer.Nickname</h3>
-            <p>Level: @comparedPlayer.CS2.Skill_Level</p>
-            <p>ELO: @comparedPlayer.CS2.Faceit_Elo</p>
-            <button class="delete-button" @onclick="() => DeleteComparedPlayer(comparedPlayer.Nickname)">Slet</button>
+    <!-- Højre side: input og søg -->
+    <div class="right-column">
+        <div class="player-info-container">
+            <input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
+            <button @onclick="AddToCompare" class="search-button">Sammenlign med spiller</button>
         </div>
-    }
-}
+    </div>
+</div>
 
 @if (allPlayers.Any())
 {
