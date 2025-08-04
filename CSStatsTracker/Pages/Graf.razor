@@ -6,17 +6,62 @@
 
 @page "/graf"
 
+<h3 class="page-title">Player Elo Comparison</h3>
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (allPlayers.Any())
+{
+    <div class="chart-container">
+        @foreach (var p in allPlayers)
+        {
+            <div class="player-bar">
+                <div class="player-info">
+                    <img src="@p.Avatar" class="player-avatar" alt="@p.Nickname" />
+                    <span class="player-name">@p.Nickname</span>
+                </div>
+                <div class="elo-bar" style="width: @(GetEloBarWidth(p.CS2?.Faceit_Elo ?? 0))%;">
+                    <span class="elo-label">@p.CS2?.Faceit_Elo</span>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No players to compare.</p>
+}
+
 
 @code {
     private Player? player;
     private bool isLoading = true;
     private List<Player> playersToCompareList = new();
+    private List<Player> allPlayers = new();
 
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
         player = await LocalStorage.GetItemAsync<Player>("MainPlayer");
         playersToCompareList = await LocalStorage.GetItemAsync<List<Player>>("ComparisonList") ?? new List<Player>();
+
+        if (player != null)
+        {
+            allPlayers.Add(player);
+        }
+        allPlayers.AddRange(playersToCompareList);
+        allPlayers = allPlayers.OrderByDescending(p => p.CS2?.Faceit_Elo ?? 0).ToList();
+
         isLoading = false;
+    }
+
+    private int GetEloBarWidth(int elo)
+    {
+        // Max elo can be around 6000, let's use that as a reference for 100% width.
+        // This can be adjusted if needed.
+        const int maxElo = 6000;
+        return (int)((double)elo / maxElo * 100);
     }
 }
