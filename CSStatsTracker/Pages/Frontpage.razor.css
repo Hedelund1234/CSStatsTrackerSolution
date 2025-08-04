@@ -39,20 +39,3 @@
     .search-button:hover {
         background-color: #ff8c1a;
     }
-
-.player-card {
-    background-color: #1e1e1e;
-    padding: 1rem;
-    margin-top: 1.5rem;
-    border: 1px solid #444;
-    border-radius: 8px;
-}
-
-    .player-card h3 {
-        color: #ff6c00;
-        margin-bottom: 0.5rem;
-    }
-
-    .player-card p {
-        margin: 0.25rem 0;
-    }

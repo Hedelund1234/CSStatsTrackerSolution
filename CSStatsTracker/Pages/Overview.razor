@@ -17,13 +17,26 @@ else if (player is null)
 else
 {
     <input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
-    <button @onclick="AddToCompare" class="search-button">Hent spiller</button>
+    <button @onclick="AddToCompare" class="search-button">Sammenlign med spiller</button>
 
     <div class="player-card">
         <h3>@player.Nickname</h3>
         <p>Level: @player.CS2.Skill_Level</p>
         <p>ELO: @player.CS2.Faceit_Elo</p>
     </div>
+}
+
+@if (playersToCompareList.Count > 0)
+{
+    @foreach (var comparedPlayer in playersToCompareList)
+    {
+        <div class="player-card">
+            <h3>@comparedPlayer.Nickname</h3>
+            <p>Level: @comparedPlayer.CS2.Skill_Level</p>
+            <p>ELO: @comparedPlayer.CS2.Faceit_Elo</p>
+            <button class="delete-button" @onclick="() => DeleteComparedPlayer(comparedPlayer.Nickname)">Slet</button>
+        </div>
+    }
 }
 
 @code {
@@ -45,11 +58,24 @@ else
         if (!string.IsNullOrEmpty(comparePlayer))
         {
             var playerToCompare = await PlayerStatsService.GetPlayerInfoAsync(comparePlayer);
-            if (playerToCompare is not null && !playersToCompareList.Any(x => x.Nickname == comparePlayer))
+            if (playerToCompare is not null && !playersToCompareList.Any(x => x.Nickname == comparePlayer) && player?.Nickname != comparePlayer)
             {
                 playersToCompareList.Add(playerToCompare);
                 await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
+                comparePlayer = string.Empty;
+                StateHasChanged();
             }
+        }
+    }
+
+    private async void DeleteComparedPlayer(string name)
+    {
+        var player = playersToCompareList.FirstOrDefault(p => p.Nickname == name);
+        if (player is not null)
+        {
+            playersToCompareList.Remove(player);
+            await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
+            StateHasChanged();
         }
     }
 }
