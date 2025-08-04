@@ -1,0 +1,131 @@
+﻿/* Overlay bag modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 1rem;
+}
+
+/* Selve modal boksen */
+.match-container {
+    background-color: #121212;
+    color: white;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 95vh;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.95);
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+    /* Header */
+    .match-container h2 {
+        margin: 0 0 0.5rem 0;
+        font-weight: 700;
+        font-size: 2rem;
+        color: #f0a500;
+    }
+
+    /* Kort info under overskrift */
+    .match-container p {
+        font-size: 1rem;
+        line-height: 1.4;
+        color: #ccc;
+    }
+
+/* Wrapper for de to teams side om side */
+.teams-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+/* Team card box */
+.team-card {
+    background: #1e1e1e;
+    padding: 1rem;
+    flex: 1;
+    border-radius: 8px;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+}
+
+    /* Team titel */
+    .team-card h3 {
+        margin-bottom: 0.5rem;
+        color: #f0a500;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+/* Spillerrække i teamet */
+.player-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid #333;
+}
+
+    /* Sidste spiller skal ikke have bundkant */
+    .player-row:last-child {
+        border-bottom: none;
+    }
+
+    /* Fremhævelse af hovedspiller */
+    .player-row.highlight {
+        background-color: #2a3a4a;
+        border-left: 4px solid #f0a500;
+        padding-left: 0.5rem;
+    }
+
+/* Avatar billeder */
+.avatar {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #555;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    background-color: #222; /* fallback baggrund hvis billede mangler */
+}
+
+
+/* Skill level tekst */
+.skill {
+    margin-left: auto;
+    font-size: 0.9rem;
+    color: #aaa;
+    font-weight: 600;
+}
+
+/* Link til Faceit i bunden */
+.match-container a {
+    color: #f0a500;
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 1rem;
+    align-self: flex-start;
+    transition: color 0.3s ease;
+}
+
+    .match-container a:hover {
+        color: #fff176;
+    }

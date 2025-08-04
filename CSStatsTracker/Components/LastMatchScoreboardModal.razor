@@ -1,0 +1,59 @@
+﻿@using CSStatsTracker.Entities.MatchRelated
+@using CSStatsTracker.Entities
+@using CSStatsTracker.Services.LastMatch
+@using CSStatsTracker.Entities.MatchStatsRelated
+@using CSStatsTracker.Services.LastMatchStats
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject ILastMatchService LastMatchService
+@inject ILastMatchStatsService LastMatchStatsService
+
+@if (LMScoreboard is null)
+{
+    <p>Indlæser scoreboard...</p>
+}
+else
+{
+    <div class="cs-scoreboard">
+        <div class="teams-container">
+
+            @foreach (var team in LMScoreboard.Teams)
+            {
+                <div class="team">
+                    <div class="team-header">
+                        <span class="team-name">@team.Team_Stats.Team</span>
+                        <span class="team-score">@team.Team_Stats.FinalScore</span>
+                    </div>
+
+                    <div class="players-list">
+                        @foreach (var player in team.Players)
+                        {
+                            <CSStatsTracker.ChildComponents.PlayerRow Player="player" />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+@code {
+    private Player? mainPlayer;
+    private MatchItem? lastMatch;
+    private Round? LMScoreboard;
+
+    protected override async Task OnInitializedAsync()
+    {
+        mainPlayer = await LocalStorage.GetItemAsync<Player>("MainPlayer");
+
+        if (mainPlayer is not null)
+        {
+            lastMatch = await LastMatchService.GetLastMatchInfoAsync(mainPlayer.Player_Id);
+        }
+
+        if (lastMatch?.Match_Id is not null)
+        {
+            LMScoreboard = await LastMatchStatsService.GetLastMatchStatsInfoAsync(lastMatch.Match_Id);
+        }
+    }
+}

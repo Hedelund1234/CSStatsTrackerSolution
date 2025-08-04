@@ -1,0 +1,21 @@
+﻿@using CSStatsTracker.Entities.MatchRelated
+@using CSStatsTracker.Entities
+@using CSStatsTracker.Services.LastMatch
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject ILastMatchService LastMatchService
+
+
+@code {
+    private Player? mainPlayer;
+    private MatchItem? lastMatch;
+
+    protected override async Task OnInitializedAsync()
+    {
+        mainPlayer = await LocalStorage.GetItemAsync<Player>("MainPlayer");
+
+        if (mainPlayer is not null)
+        {
+            lastMatch = await LastMatchService.GetLastMatchInfoAsync(mainPlayer.Player_Id);
+        }
+    }
+}

@@ -31,6 +31,12 @@
                 }
             </ul>
         }
+            <button class="btn-show-last-match" @onclick="ShowLastMatch">Vis Seneste Kamp</button>
+
+    @if (showLastMatch)
+    {
+        <CSStatsTracker.Components.LastMatchScoreboardModal/>
+    }
     </div>
 
     <!-- Højre side: input og søg -->
@@ -66,20 +72,22 @@ else
 
 @code {
     private Player? player;
-    private bool isLoading = true;
     private string comparePlayer = string.Empty;
     private List<Player> playersToCompareList = new();
     private List<Player> allPlayers = new();
+    private bool showLastMatch = false;
+
+    private void ShowLastMatch()
+    {
+        showLastMatch = true;
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        isLoading = true;
         player = await LocalStorage.GetItemAsync<Player>("MainPlayer");
         playersToCompareList = await LocalStorage.GetItemAsync<List<Player>>("ComparisonList") ?? new List<Player>();
 
         UpdateAllPlayers();
-
-        isLoading = false;
     }
 
     private void UpdateAllPlayers()

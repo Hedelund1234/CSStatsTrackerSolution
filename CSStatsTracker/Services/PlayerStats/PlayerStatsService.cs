@@ -20,7 +20,7 @@ namespace CSStatsTracker.Services.PlayerStats
 
             var player = await _httpClient.GetFromJsonAsync<Player>(url);
 
-            return player;
+            return player ?? new Player();
         }
     }
 }

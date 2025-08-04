@@ -1,0 +1,32 @@
+﻿@using CSStatsTracker.Entities.MatchStatsRelated
+
+<div class="player-row" @onclick="ToggleDetails">
+    <div class="player-basic">
+        <span class="player-name">@Player.Nickname</span>
+        <span class="player-kd">@($"{Player.Player_Stats.Kills}/{Player.Player_Stats.Deaths}")</span>
+        <span class="player-adr">@Player.Player_Stats.ADR</span>
+        <span class="player-mvp">@Player.Player_Stats.MVPs</span>
+    </div>
+    @if (showDetails)
+    {
+        <div class="player-details">
+            <div><strong>Assists:</strong> @Player.Player_Stats.Assists</div>
+            <div><strong>Headshots:</strong> @Player.Player_Stats.Headshots</div>
+            <div><strong>Utility Damage:</strong> @Player.Player_Stats.UtilityDamage</div>
+            <div><strong>1v1 Wins:</strong> @Player.Player_Stats._1v1Wins</div>
+            <div><strong>Clutch Kills:</strong> @Player.Player_Stats.ClutchKills</div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public MatchStatsPlayer Player { get; set; } = default!;
+
+    private bool showDetails = false;
+
+    private void ToggleDetails()
+    {
+        showDetails = !showDetails;
+    }
+}

@@ -1,0 +1,40 @@
+﻿.player-row {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #333;
+    padding: 8px 0;
+    cursor: pointer;
+}
+
+.player-basic {
+    display: flex;
+    gap: 10px;
+    font-size: 0.9rem;
+    align-items: center;
+    color: #ddd;
+}
+
+.player-name {
+    flex: 2;
+    font-weight: 600;
+}
+
+.player-kda, .player-plusminus, .player-adr, .player-od, .player-mk, .player-1vx, .player-score, .player-form {
+    flex: 1;
+    text-align: center;
+}
+
+.player-score {
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.player-details {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #aaa;
+    display: flex;
+    gap: 15px;
+}
