@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write  # ← dette giver github-actions adgang til at pushe
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
