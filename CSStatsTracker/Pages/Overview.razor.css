@@ -57,3 +57,75 @@
     .delete-button:hover {
         background-color: #ff5c5c;
     }
+
+.player-info-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    background-color: #2b2b2b;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+    .player-info-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #ff6c00;
+    }
+
+
+/*Visual Graf*/
+.page-title {
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.chart-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+}
+
+.player-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    width: 200px; /* Adjust as needed */
+    margin-right: 10px;
+    color: #fff;
+}
+
+.player-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+.elo-bar {
+    height: 40px;
+    background-color: #4CAF50;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.elo-label {
+    font-weight: bold;
+}

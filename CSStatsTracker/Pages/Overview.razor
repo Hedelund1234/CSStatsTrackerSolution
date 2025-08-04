@@ -6,6 +6,11 @@
 
 @page "/overview"
 
+<div class="player-info-container">
+    <input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
+    <button @onclick="AddToCompare" class="search-button">Sammenlign med spiller</button>
+</div>
+
 @if (isLoading)
 {
     <p>Indlæser spillerdata...</p>
@@ -16,9 +21,6 @@ else if (player is null)
 }
 else
 {
-    <input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
-    <button @onclick="AddToCompare" class="search-button">Sammenlign med spiller</button>
-
     <div class="player-card">
         <h3>@player.Nickname</h3>
         <p>Level: @player.CS2.Skill_Level</p>
@@ -39,18 +41,56 @@ else
     }
 }
 
+@if (allPlayers.Any())
+{
+    <div class="chart-container">
+        @foreach (var p in allPlayers)
+        {
+            <div class="player-bar">
+                <div class="player-info">
+                    <img src="@p.Avatar" class="player-avatar" alt="@p.Nickname" />
+                    <span class="player-name">@p.Nickname</span>
+                </div>
+                <div class="elo-bar" style="width: @(GetEloBarWidth(p.CS2?.Faceit_Elo ?? 0))%;">
+                    <span class="elo-label">@p.CS2?.Faceit_Elo</span>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No players to compare.</p>
+}
+
 @code {
     private Player? player;
     private bool isLoading = true;
     private string comparePlayer = string.Empty;
     private List<Player> playersToCompareList = new();
+    private List<Player> allPlayers = new();
 
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
         player = await LocalStorage.GetItemAsync<Player>("MainPlayer");
         playersToCompareList = await LocalStorage.GetItemAsync<List<Player>>("ComparisonList") ?? new List<Player>();
+
+        UpdateAllPlayers();
+
         isLoading = false;
+    }
+
+    private void UpdateAllPlayers()
+    {
+        if (player != null)
+        {
+            allPlayers = new();
+            allPlayers.Add(player);
+            allPlayers.AddRange(playersToCompareList);
+            allPlayers = allPlayers.OrderByDescending(p => p.CS2?.Faceit_Elo ?? 0).ToList();
+            StateHasChanged();
+        }
     }
 
     private async Task AddToCompare()
@@ -63,7 +103,7 @@ else
                 playersToCompareList.Add(playerToCompare);
                 await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
                 comparePlayer = string.Empty;
-                StateHasChanged();
+                UpdateAllPlayers();
             }
         }
     }
@@ -75,7 +115,14 @@ else
         {
             playersToCompareList.Remove(player);
             await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
-            StateHasChanged();
+            UpdateAllPlayers();
         }
+    }
+
+    private int GetEloBarWidth(int elo)
+    {
+        // Current max elo set at 4000
+        const int maxElo = 4000;
+        return (int)((double)elo / maxElo * 100);
     }
 }
