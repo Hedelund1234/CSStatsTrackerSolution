@@ -8,7 +8,7 @@
 @inject ILastMatchStatsService LastMatchStatsService
 
 <div class="modal-overlay" @onclick="OverlayClick">
-    <div class="modal-content" @onclick:stopPropagation>
+    <div class="modal-content scoreboard-modal" @onclick:stopPropagation>
         <button class="modal-close-btn" @onclick="CloseModal">✖</button>
 
         @if (LMScoreboard is null)
@@ -28,15 +28,15 @@
                                 <span class="team-name">@team.Team_Stats.Team</span>
                                 <span class="team-score">@team.Team_Stats.FinalScore</span>
                             </div>
+
                             <div class="players-list">
                                 <div class="player-row header-row">
-                                    <div class="player-basic">
-                                        <span class="player-name">Navn</span>
-                                        <span class="player-kd">K/D</span>
-                                        <span class="player-adr">ADR</span>
-                                        <span class="player-mvp">MVPs</span>
-                                    </div>
+                                    <div class="player-col name">Navn</div>
+                                    <div class="player-col kd">K/D</div>
+                                    <div class="player-col adr">ADR</div>
+                                    <div class="player-col mvp">MVPs</div>
                                 </div>
+
                                 @foreach (var player in team.Players)
                                 {
                                     <CSStatsTracker.ChildComponents.PlayerRow Player="player" />
@@ -79,7 +79,6 @@
 
     private async Task OverlayClick()
     {
-        // Klik på overlay lukker modal
         await CloseModal();
     }
 }
