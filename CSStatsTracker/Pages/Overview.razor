@@ -1,0 +1,55 @@
+﻿@using CSStatsTracker.Services.PlayerStats
+@using CSStatsTracker.Entities
+@inject IPlayerStatsService PlayerStatsService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+@page "/overview"
+
+@if (isLoading)
+{
+    <p>Indlæser spillerdata...</p>
+}
+else if (player is null)
+{
+    <p>Ingen spillerdata fundet.</p>
+}
+else
+{
+    <input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
+    <button @onclick="AddToCompare" class="search-button">Hent spiller</button>
+
+    <div class="player-card">
+        <h3>@player.Nickname</h3>
+        <p>Level: @player.CS2.Skill_Level</p>
+        <p>ELO: @player.CS2.Faceit_Elo</p>
+    </div>
+}
+
+@code {
+    private Player? player;
+    private bool isLoading = true;
+    private string comparePlayer = string.Empty;
+    private List<Player> playersToCompareList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        player = await LocalStorage.GetItemAsync<Player>("MainPlayer");
+        playersToCompareList = await LocalStorage.GetItemAsync<List<Player>>("ComparisonList") ?? new List<Player>();
+        isLoading = false;
+    }
+
+    private async Task AddToCompare()
+    {
+        if (!string.IsNullOrEmpty(comparePlayer))
+        {
+            var playerToCompare = await PlayerStatsService.GetPlayerInfoAsync(comparePlayer);
+            if (playerToCompare is not null && !playersToCompareList.Any(x => x.Nickname == comparePlayer))
+            {
+                playersToCompareList.Add(playerToCompare);
+                await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
+            }
+        }
+    }
+}

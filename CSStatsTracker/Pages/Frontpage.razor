@@ -1,0 +1,42 @@
+﻿@using CSStatsTracker.Entities
+@using CSStatsTracker.Services.PlayerStats
+@inject IPlayerStatsService PlayerStatsService
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+@page "/"
+
+<div class="player-info-container">
+    <h2>Find din CS-spiller</h2>
+
+    <input @bind="playerName" placeholder="Indtast spillerens navn" class="input-field" />
+    <button @onclick="SearchPlayer" class="search-button">Hent spiller</button>
+
+    @if (searchFailed)
+    {
+        <p class="error-message">Spilleren blev ikke fundet.</p>
+    }
+
+</div>
+
+@code {
+    private Player playerInfo = new();
+    private string playerName = string.Empty;
+    private bool searchFailed = false;
+
+    private async Task SearchPlayer()
+    {
+        searchFailed = false;
+        playerInfo = await PlayerStatsService.GetPlayerInfoAsync(playerName);
+
+        if (!string.IsNullOrEmpty(playerInfo?.Nickname))
+        {
+            await LocalStorage.SetItemAsync($"MainPlayer", playerInfo);
+            NavigationManager.NavigateTo("/overview");
+        }
+        else
+        {
+            searchFailed = true;
+        }
+    }
+}

@@ -1,0 +1,58 @@
+﻿.player-info-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    background-color: #2b2b2b;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+    .player-info-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #ff6c00;
+    }
+
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    border: none;
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.search-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #ff6c00;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .search-button:hover {
+        background-color: #ff8c1a;
+    }
+
+.player-card {
+    background-color: #1e1e1e;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border: 1px solid #444;
+    border-radius: 8px;
+}
+
+    .player-card h3 {
+        color: #ff6c00;
+        margin-bottom: 0.5rem;
+    }
+
+    .player-card p {
+        margin: 0.25rem 0;
+    }
