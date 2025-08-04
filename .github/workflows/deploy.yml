@@ -3,7 +3,7 @@ name: Deploy Blazor WASM to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build-and-deploy:
@@ -26,7 +26,7 @@ jobs:
           REPO_NAME=${{ github.repository#*\/ }}
           INDEX_FILE=./bin/Release/net8.0/publish/wwwroot/index.html
           echo "Updating <base href> to /$REPO_NAME/ in $INDEX_FILE"
-          sed -i 's|<base href="[^"]*"|<base href="/'"$REPO_NAME"'/"|' $INDEX_FILE
+          sed -i 's|<base href=".*"|<base href="/'"$REPO_NAME"'/">|' $INDEX_FILE
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
