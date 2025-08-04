@@ -7,14 +7,22 @@
         <span class="player-adr">@Player.Player_Stats.ADR</span>
         <span class="player-mvp">@Player.Player_Stats.MVPs</span>
     </div>
+
     @if (showDetails)
     {
         <div class="player-details">
-            <div><strong>Assists:</strong> @Player.Player_Stats.Assists</div>
-            <div><strong>Headshots:</strong> @Player.Player_Stats.Headshots</div>
-            <div><strong>Utility Damage:</strong> @Player.Player_Stats.UtilityDamage</div>
-            <div><strong>1v1 Wins:</strong> @Player.Player_Stats._1v1Wins</div>
-            <div><strong>Clutch Kills:</strong> @Player.Player_Stats.ClutchKills</div>
+            @foreach (var prop in Player.Player_Stats.GetType().GetProperties())
+            {
+                var label = FormatLabel(prop.Name);
+                var value = prop.GetValue(Player.Player_Stats)?.ToString();
+
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    <div class="detail-item">
+                        <strong>@label:</strong> @value
+                    </div>
+                }
+            }
         </div>
     }
 </div>
@@ -28,5 +36,20 @@
     private void ToggleDetails()
     {
         showDetails = !showDetails;
+    }
+
+    private string FormatLabel(string propName)
+    {
+        if (propName.StartsWith("_"))
+            propName = propName.Substring(1);
+
+        // Convert PascalCase or _1v1Count to "1v1 Count"
+        var formatted = System.Text.RegularExpressions.Regex
+            .Replace(propName, "(\\B[A-Z])", " $1")
+            .Replace("_", " ")
+            .Replace("  ", " ")
+            .Trim();
+
+        return char.ToUpper(formatted[0]) + formatted[1..];
     }
 }
