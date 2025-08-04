@@ -1,37 +1,46 @@
-name: Deploy Blazor WebAssembly to GitHub Pages
+name: Publish Blazor WASM to GitHub Pages
 
 on:
   push:
     branches:
-      - master
-
-permissions:
-  contents: write  # ← dette giver github-actions adgang til at pushe
+      - master  # eller din default branch
 
 jobs:
-  build-and-deploy:
+  build-and-publish:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Tjek kode ud
-        uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v3
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'  # brug din version
 
-      - name: Build
-        run: dotnet publish -c Release -o release
+    - name: Restore dependencies
+      run: dotnet restore
 
-      - name: Patch base href i index.html
-        run: |
-          sed -i 's|<base href="/" />|<base href="/CSStatsTrackerSolution/" />|' release/wwwroot/index.html
+    - name: Publish Blazor WASM
+      run: dotnet publish --configuration Release
 
-      - name: Kopiér index.html til 404.html (for SPA routing)
-        run: cp release/wwwroot/index.html release/wwwroot/404.html
+    - name: Copy wwwroot to docs folder
+      run: |
+        rm -rf docs
+        mkdir docs
+        cp -r bin/Release/net6.0/publish/wwwroot/* docs/
 
-      - name: Deploy til GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./release/wwwroot
+    - name: Remove compressed files
+      run: |
+        rm -f docs/_framework*.br
+        rm -f docs/_framework*.gz
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add docs
+        git commit -m "Publish Blazor WASM to docs for GitHub Pages" || echo "No changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
