@@ -22,7 +22,7 @@ jobs:
 
       - name: Patch base href i index.html
         run: |
-          sed -i 's|<base href="/" />|<base href="/DIT-REPO-NAVN/" />|' release/wwwroot/index.html
+          sed -i 's|<base href="/" />|<base href="/CSStatsTrackerSolution/" />|' release/wwwroot/index.html
 
       - name: Kopiér index.html til 404.html (for SPA routing)
         run: cp release/wwwroot/index.html release/wwwroot/404.html
