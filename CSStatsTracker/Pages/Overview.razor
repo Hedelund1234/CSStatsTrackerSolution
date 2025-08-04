@@ -31,11 +31,11 @@
                 }
             </ul>
         }
-            <button class="btn-show-last-match" @onclick="ShowLastMatch">Vis Seneste Kamp</button>
+        <button class="btn-show-last-match" @onclick="ShowLastMatch">Vis Seneste Kamp</button>
 
     @if (showLastMatch)
     {
-        <CSStatsTracker.Components.LastMatchScoreboardModal/>
+            <CSStatsTracker.Components.LastMatchScoreboardModal OnClose="OnModalClose" />
     }
     </div>
 
@@ -80,6 +80,11 @@ else
     private void ShowLastMatch()
     {
         showLastMatch = true;
+    }
+
+    private void OnModalClose(bool isOpen)
+    {
+        showLastMatch = isOpen;
     }
 
     protected override async Task OnInitializedAsync()

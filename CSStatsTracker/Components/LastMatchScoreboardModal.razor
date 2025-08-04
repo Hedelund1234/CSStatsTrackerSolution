@@ -7,37 +7,52 @@
 @inject ILastMatchService LastMatchService
 @inject ILastMatchStatsService LastMatchStatsService
 
-@if (LMScoreboard is null)
-{
-    <p>Indlæser scoreboard...</p>
-}
-else
-{
-    <div class="cs-scoreboard">
-        <div class="teams-container">
+<div class="modal-overlay" @onclick="OverlayClick">
+    <div class="modal-content" @onclick:stopPropagation>
+        <button class="modal-close-btn" @onclick="CloseModal">✖</button>
 
-            @foreach (var team in LMScoreboard.Teams)
-            {
-                <div class="team">
-                    <div class="team-header">
-                        <span class="team-name">@team.Team_Stats.Team</span>
-                        <span class="team-score">@team.Team_Stats.FinalScore</span>
-                    </div>
+        @if (LMScoreboard is null)
+        {
+            <p>Indlæser scoreboard...</p>
+        }
+        else
+        {
+            <div class="cs-scoreboard">
+                <div class="map-name">@LMScoreboard.Round_Stats.Map</div>
 
-                    <div class="players-list">
-                        @foreach (var player in team.Players)
-                        {
-                            <CSStatsTracker.ChildComponents.PlayerRow Player="player" />
-                        }
-                    </div>
+                <div class="teams-container">
+                    @foreach (var team in LMScoreboard.Teams)
+                    {
+                        <div class="team">
+                            <div class="team-header">
+                                <span class="team-name">@team.Team_Stats.Team</span>
+                                <span class="team-score">@team.Team_Stats.FinalScore</span>
+                            </div>
+                            <div class="players-list">
+                                <div class="player-row header-row">
+                                    <div class="player-basic">
+                                        <span class="player-name">Navn</span>
+                                        <span class="player-kd">K/D</span>
+                                        <span class="player-adr">ADR</span>
+                                        <span class="player-mvp">MVPs</span>
+                                    </div>
+                                </div>
+                                @foreach (var player in team.Players)
+                                {
+                                    <CSStatsTracker.ChildComponents.PlayerRow Player="player" />
+                                }
+                            </div>
+                        </div>
+                    }
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
-}
-
+</div>
 
 @code {
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+
     private Player? mainPlayer;
     private MatchItem? lastMatch;
     private Round? LMScoreboard;
@@ -55,5 +70,16 @@ else
         {
             LMScoreboard = await LastMatchStatsService.GetLastMatchStatsInfoAsync(lastMatch.Match_Id);
         }
+    }
+
+    private async Task CloseModal()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+
+    private async Task OverlayClick()
+    {
+        // Klik på overlay lukker modal
+        await CloseModal();
     }
 }
