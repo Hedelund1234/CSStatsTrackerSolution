@@ -79,6 +79,7 @@ else
 	private List<Player> playersToCompareList = new();
 	private List<Player> allPlayers = new();
 	private bool showLastMatch = false;
+	private DateTime? lastUpdateTime = null;
 
 	private void ShowLastMatch()
 	{
@@ -112,6 +113,10 @@ else
 
 	private async Task UpdateAllPlayersOnList()
 	{
+		if (lastUpdateTime.HasValue && DateTime.Now - lastUpdateTime.Value < TimeSpan.FromMinutes(1))
+		{
+			return;
+		}
 		List<Player> newList = new();
 
 		foreach (var player in playersToCompareList)
@@ -122,6 +127,7 @@ else
 
 		playersToCompareList = newList;
 		await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
+		lastUpdateTime = DateTime.Now;
 		UpdateAllPlayers();
 	}
 
