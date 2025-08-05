@@ -44,6 +44,9 @@
 		<div class="player-info-container">
 			<input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
 			<button @onclick="AddToCompare" class="search-button">Sammenlign med spiller</button>
+			<br />
+			<br />
+			<button @onclick="UpdateAllPlayersOnList" class="search-button">Opdater alle spillere</button>
 		</div>
 	</div>
 </div>
@@ -105,6 +108,21 @@ else
 			allPlayers = allPlayers.OrderByDescending(p => p.CS2?.Faceit_Elo ?? 0).ToList();
 			StateHasChanged();
 		}
+	}
+
+	private async Task UpdateAllPlayersOnList()
+	{
+		List<Player> newList = new();
+
+		foreach (var player in playersToCompareList)
+		{
+			var playerToCompare = await PlayerStatsService.GetPlayerInfoAsync(player.Nickname);
+			newList.Add(playerToCompare);
+		}
+
+		playersToCompareList = newList;
+		await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
+		UpdateAllPlayers();
 	}
 
 	private async Task AddToCompare()
