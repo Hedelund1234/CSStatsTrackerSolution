@@ -29,6 +29,9 @@ jobs:
       - name: Copy index.html to 404.html (for client-side routing)
         run: cp release/wwwroot/index.html release/wwwroot/404.html
 
+      - name: Add CNAME file for custom domain
+        run: echo "www.cstracker.hedef.dk" > release/wwwroot/CNAME
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
