@@ -26,7 +26,7 @@ jobs:
         run: dotnet publish -c Release -o release
 
       - name: Patch base href for GitHub Pages
-        run: sed -i 's|<base href="/" />|<base href="/CSStatsTrackerSolution/" />|' release/wwwroot/index.html
+        run: sed -i 's|<base href="" />|<base href="/CSStatsTrackerSolution/" />|' release/wwwroot/index.html
 
       - name: Copy index.html to 404.html (for client-side routing)
         run: cp release/wwwroot/index.html release/wwwroot/404.html
