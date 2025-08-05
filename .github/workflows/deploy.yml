@@ -10,6 +10,7 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,11 +23,8 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Publish Blazor WebAssembly app
-        run: dotnet publish -c Release -o release
-
-      - name: Patch base href for GitHub Pages
-        run: sed -i 's|<base href="" />|<base href="/CSStatsTrackerSolution/" />|' release/wwwroot/index.html
+      - name: Publish Blazor WebAssembly app with base path
+        run: dotnet publish -c Release -o release /p:BasePath=/CSStatsTrackerSolution/
 
       - name: Copy index.html to 404.html (for client-side routing)
         run: cp release/wwwroot/index.html release/wwwroot/404.html
