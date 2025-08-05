@@ -27,16 +27,24 @@
     private async Task SearchPlayer()
     {
         searchFailed = false;
-        playerInfo = await PlayerStatsService.GetPlayerInfoAsync(playerName);
-
-        if (!string.IsNullOrEmpty(playerInfo?.Nickname))
+        try
         {
-            await LocalStorage.SetItemAsync($"MainPlayer", playerInfo);
-            NavigationManager.NavigateTo("/overview");
+            playerInfo = await PlayerStatsService.GetPlayerInfoAsync(playerName);
+
+            if (!string.IsNullOrEmpty(playerInfo?.Nickname) && playerInfo.CS2 != null)
+            {
+                await LocalStorage.SetItemAsync($"MainPlayer", playerInfo);
+                NavigationManager.NavigateTo("/overview");
+            }
+            else
+            {
+                searchFailed = true;
+            }
         }
-        else
+        catch (Exception e)
         {
             searchFailed = true;
         }
+
     }
 }

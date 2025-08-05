@@ -7,136 +7,143 @@
 @page "/overview"
 
 <div class="overview-layout">
-    <!-- Venstre side: Liste og spiller -->
-    <div class="left-column">
-        @if (player is not null)
-        {
-            <div class="player-card">
-                <h3>@player.Nickname</h3>
-                <p>Level: @player.CS2.Skill_Level</p>
-                <p>ELO: @player.CS2.Faceit_Elo</p>
-            </div>
-        }
+	<!-- Venstre side: Liste og spiller -->
+	<div class="left-column">
+		@if (player is not null)
+		{
+			<div class="player-card">
+				<h3>@player.Nickname</h3>
+				<p>Level: @player.CS2.Skill_Level</p>
+				<p>ELO: @player.CS2.Faceit_Elo</p>
+			</div>
+		}
 
-        @if (playersToCompareList.Count > 0)
-        {
-            <ul class="player-compare-list">
-                @foreach (var comparedPlayer in playersToCompareList)
-                {
-                    <li class="compare-list-item">
-                        <span class="compare-name">@comparedPlayer.Nickname</span>
-                        <span class="compare-stats">Level: @comparedPlayer.CS2.Skill_Level | ELO: @comparedPlayer.CS2.Faceit_Elo</span>
-                        <button class="delete-button small" @onclick="() => DeleteComparedPlayer(comparedPlayer.Nickname)">Slet</button>
-                    </li>
-                }
-            </ul>
-        }
-        <button class="btn-show-last-match" @onclick="ShowLastMatch">Vis Seneste Kamp</button>
+		@if (playersToCompareList.Count > 0)
+		{
+			<ul class="player-compare-list">
+				@foreach (var comparedPlayer in playersToCompareList)
+				{
+					<li class="compare-list-item">
+						<span class="compare-name">@comparedPlayer.Nickname</span>
+						<span class="compare-stats">Level: @comparedPlayer.CS2.Skill_Level | ELO: @comparedPlayer.CS2.Faceit_Elo</span>
+						<button class="delete-button small" @onclick="() => DeleteComparedPlayer(comparedPlayer.Nickname)">Slet</button>
+					</li>
+				}
+			</ul>
+		}
+		<button class="btn-show-last-match" @onclick="ShowLastMatch">Vis Seneste Kamp</button>
 
-    @if (showLastMatch)
-    {
-            <CSStatsTracker.Components.LastMatchScoreboardModal OnClose="OnModalClose" />
-    }
-    </div>
+		@if (showLastMatch)
+		{
+			<CSStatsTracker.Components.LastMatchScoreboardModal OnClose="OnModalClose" />
+		}
+	</div>
 
-    <!-- Højre side: input og søg -->
-    <div class="right-column">
-        <div class="player-info-container">
-            <input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
-            <button @onclick="AddToCompare" class="search-button">Sammenlign med spiller</button>
-        </div>
-    </div>
+	<!-- Højre side: input og søg -->
+	<div class="right-column">
+		<div class="player-info-container">
+			<input @bind="comparePlayer" placeholder="Indtast spillerens navn" class="input-field" />
+			<button @onclick="AddToCompare" class="search-button">Sammenlign med spiller</button>
+		</div>
+	</div>
 </div>
 
 @if (allPlayers.Any())
 {
-    <div class="chart-container">
-        @foreach (var p in allPlayers)
-        {
-            <div class="player-bar">
-                <div class="player-info">
-                    <img src="@p.Avatar" class="player-avatar" alt="@p.Nickname" />
-                    <span class="player-name">@p.Nickname</span>
-                </div>
-                <div class="elo-bar" style="width: @(GetEloBarWidth(p.CS2?.Faceit_Elo ?? 0))%;">
-                    <span class="elo-label">@p.CS2?.Faceit_Elo</span>
-                </div>
-            </div>
-        }
-    </div>
+	<div class="chart-container">
+		@foreach (var p in allPlayers)
+		{
+			<div class="player-bar">
+				<div class="player-info">
+					<img src="@p.Avatar" class="player-avatar" alt="@p.Nickname" />
+					<span class="player-name">@p.Nickname</span>
+				</div>
+				<div class="elo-bar" style="width: @(GetEloBarWidth(p.CS2?.Faceit_Elo ?? 0))%;">
+					<span class="elo-label">@p.CS2?.Faceit_Elo</span>
+				</div>
+			</div>
+		}
+	</div>
 }
 else
 {
-    <p>No players to compare.</p>
+	<p>No players to compare.</p>
 }
 
 @code {
-    private Player? player;
-    private string comparePlayer = string.Empty;
-    private List<Player> playersToCompareList = new();
-    private List<Player> allPlayers = new();
-    private bool showLastMatch = false;
+	private Player? player;
+	private string comparePlayer = string.Empty;
+	private List<Player> playersToCompareList = new();
+	private List<Player> allPlayers = new();
+	private bool showLastMatch = false;
 
-    private void ShowLastMatch()
-    {
-        showLastMatch = true;
-    }
+	private void ShowLastMatch()
+	{
+		showLastMatch = true;
+	}
 
-    private void OnModalClose(bool isOpen)
-    {
-        showLastMatch = isOpen;
-    }
+	private void OnModalClose(bool isOpen)
+	{
+		showLastMatch = isOpen;
+	}
 
-    protected override async Task OnInitializedAsync()
-    {
-        player = await LocalStorage.GetItemAsync<Player>("MainPlayer");
-        playersToCompareList = await LocalStorage.GetItemAsync<List<Player>>("ComparisonList") ?? new List<Player>();
+	protected override async Task OnInitializedAsync()
+	{
+		player = await LocalStorage.GetItemAsync<Player>("MainPlayer");
+		playersToCompareList = await LocalStorage.GetItemAsync<List<Player>>("ComparisonList") ?? new List<Player>();
 
-        UpdateAllPlayers();
-    }
+		UpdateAllPlayers();
+	}
 
-    private void UpdateAllPlayers()
-    {
-        if (player != null)
-        {
-            allPlayers = new();
-            allPlayers.Add(player);
-            allPlayers.AddRange(playersToCompareList);
-            allPlayers = allPlayers.OrderByDescending(p => p.CS2?.Faceit_Elo ?? 0).ToList();
-            StateHasChanged();
-        }
-    }
+	private void UpdateAllPlayers()
+	{
+		if (player != null)
+		{
+			allPlayers = new();
+			allPlayers.Add(player);
+			allPlayers.AddRange(playersToCompareList);
+			allPlayers = allPlayers.OrderByDescending(p => p.CS2?.Faceit_Elo ?? 0).ToList();
+			StateHasChanged();
+		}
+	}
 
-    private async Task AddToCompare()
-    {
-        if (!string.IsNullOrEmpty(comparePlayer))
-        {
-            var playerToCompare = await PlayerStatsService.GetPlayerInfoAsync(comparePlayer);
-            if (playerToCompare is not null && !playersToCompareList.Any(x => x.Nickname == comparePlayer) && player?.Nickname != comparePlayer)
-            {
-                playersToCompareList.Add(playerToCompare);
-                await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
-                comparePlayer = string.Empty;
-                UpdateAllPlayers();
-            }
-        }
-    }
+	private async Task AddToCompare()
+	{
+		if (!string.IsNullOrEmpty(comparePlayer))
+		{
+			try
+			{
+				var playerToCompare = await PlayerStatsService.GetPlayerInfoAsync(comparePlayer);
+				if (playerToCompare is not null && !playersToCompareList.Any(x => x.Nickname == comparePlayer) && player?.Nickname != comparePlayer && playerToCompare.CS2 != null)
+				{
+					playersToCompareList.Add(playerToCompare);
+					await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
+					comparePlayer = string.Empty;
+					UpdateAllPlayers();
+				}
+			}
+			catch (Exception e)
+			{
+				comparePlayer = "Findes ikke ?!?!?!?!!";
+			}
+		}
+	}
 
-    private async void DeleteComparedPlayer(string name)
-    {
-        var player = playersToCompareList.FirstOrDefault(p => p.Nickname == name);
-        if (player is not null)
-        {
-            playersToCompareList.Remove(player);
-            await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
-            UpdateAllPlayers();
-        }
-    }
+	private async void DeleteComparedPlayer(string name)
+	{
+		var player = playersToCompareList.FirstOrDefault(p => p.Nickname == name);
+		if (player is not null)
+		{
+			playersToCompareList.Remove(player);
+			await LocalStorage.SetItemAsync($"ComparisonList", playersToCompareList);
+			UpdateAllPlayers();
+		}
+	}
 
-    private int GetEloBarWidth(int elo)
-    {
-        // Current max elo set at 4000
-        const int maxElo = 4000;
-        return (int)((double)elo / maxElo * 100);
-    }
+	private int GetEloBarWidth(int elo)
+	{
+		// Current max elo set at 4000
+		const int maxElo = 4000;
+		return (int)((double)elo / maxElo * 100);
+	}
 }
