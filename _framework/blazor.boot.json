@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "CSStatsTracker",
   "resources": {
-    "hash": "sha256-sU0Z/WPcBB/kuh6OpijtEYpf04E3E7Hu7rlCNvzdaYQ=",
+    "hash": "sha256-pke0dUqWZOHz8bveGVfC7lblbu9YGUZcwQbg6DyieJo=",
     "jsModuleNative": {
       "dotnet.native.8.0.19.ihm50f0zha.js": "sha256-O/NCYcAN9uPocD7ns7AzF/cqx7f5vL1PTJCQs0vEXyk="
     },
@@ -18,7 +18,7 @@
     },
     "assembly": {
       "Blazored.LocalStorage.wasm": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
-      "CSStatsTracker.wasm": "sha256-4dyGjHIQtP4DV9FUfDFiSln9HV0Xz3OvZlFIJn9aDJs=",
+      "CSStatsTracker.wasm": "sha256-VuE5+uBTYnPA/qITam0mfBoeqkhzWmqynnE5NBxs/eM=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-JRXa/5Qn6vliaeEWBL8iTzyLzMvHmjGNObNeho5pliQ=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-RqlLxFYDyCXHgwyirGTTKFO/sVIPjCEWyiPc2+4G7hU=",
       "Microsoft.AspNetCore.Components.WebAssembly.wasm": "sha256-YoadW5BtLED6pPB6llqipaN3ExAuKDQqnj+wuYCoLYo=",
